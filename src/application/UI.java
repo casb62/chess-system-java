@@ -3,6 +3,7 @@ package application;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import chess.Color;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -30,8 +31,15 @@ public class UI {
 
     // https://stackoverflow.com/questions/2979383/java-clear-the-console
     public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
     }
 
     public static ChessPosition readChessPosition(Scanner sc) {
